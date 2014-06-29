@@ -34,10 +34,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <CoreAudio/CoreAudio.h>
 
 typedef enum { 
-    kAudioTypeUnknown = 0,
-    kAudioTypeInput   = 1,
-    kAudioTypeOutput  = 2,
-    kAudioTypeSystemOutput = 3
+    kAudioTypeUnknown      = 0,
+    kAudioTypeInput        = 1,
+    kAudioTypeOutput       = 2,
+    kAudioTypeInputOutput  = 3,
+    kAudioTypeSystemOutput = 4
 } ASDeviceType;
 
 enum {

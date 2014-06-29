@@ -214,12 +214,15 @@ void getDeviceName(AudioDeviceID deviceID, char * deviceName) {
                                deviceName);
 }
 
-// returns kAudioTypeInput or kAudioTypeOutput
+// returns kAudioTypeInput, kAudioTypeOutput, or kAudioTypeInputOutput
 ASDeviceType getDeviceType(AudioDeviceID deviceID) {
     UInt32 propertySize = 256;
     AudioObjectPropertyAddress address;
     address.mSelector = kAudioDevicePropertyStreams;
     address.mElement = kAudioObjectPropertyElementMaster;
+
+    bool isOutput = false;
+    bool isInput = false;
 
     // if there are any output streams, then it is an output
     address.mScope = kAudioObjectPropertyScopeOutput;
@@ -228,7 +231,7 @@ ASDeviceType getDeviceType(AudioDeviceID deviceID) {
                                    0,
                                    NULL,
                                    &propertySize);
-    if (propertySize > 0) return kAudioTypeOutput;
+    if (propertySize > 0) isOutput = true;
 
     // if there are any input streams, then it is an input
     address.mScope = kAudioObjectPropertyScopeInput;
@@ -237,7 +240,11 @@ ASDeviceType getDeviceType(AudioDeviceID deviceID) {
                                    0,
                                    NULL,
                                    &propertySize);
-    if (propertySize > 0) return kAudioTypeInput;
+    if (propertySize > 0) isInput = true;
+
+    if (isOutput && isInput) return kAudioTypeInputOutput;
+    if (isOutput) return kAudioTypeOutput;
+    if (isInput) return kAudioTypeInput;
 
     return kAudioTypeUnknown;
 }
@@ -293,11 +300,11 @@ AudioDeviceID getRequestedDeviceID(char * requestedDeviceName, ASDeviceType type
     for(int i = 0; i < numberOfDevices; ++i) {
         switch(typeRequested) {
             case kAudioTypeInput:
-            case kAudioTypeOutput:
-                if (getDeviceType(dev_array[i]) != typeRequested) continue;
+                if (getDeviceType(dev_array[i]) != kAudioTypeInput && getDeviceType(dev_array[i] != kAudioTypeInputOutput)) continue;
                 break;
+            case kAudioTypeOutput:
             case kAudioTypeSystemOutput:
-                if (getDeviceType(dev_array[i]) != kAudioTypeOutput) continue;
+                if (getDeviceType(dev_array[i]) != kAudioTypeOutput && getDeviceType(dev_array[i] != kAudioTypeInputOutput)) continue;
                 break;
             default:
                 return kAudioDeviceUnknown;
@@ -344,12 +351,13 @@ AudioDeviceID getNextDeviceID(AudioDeviceID currentDeviceID, ASDeviceType typeRe
     for(int i = 0; i < numberOfDevices; ++i) {
         switch(typeRequested) {
             case kAudioTypeInput:
+                if (getDeviceType(dev_array[i]) != kAudioTypeInput && getDeviceType(dev_array[i] != kAudioTypeInputOutput)) continue;
+                break;
             case kAudioTypeOutput:
-                if (getDeviceType(dev_array[i]) != typeRequested) continue;
-                break;
             case kAudioTypeSystemOutput:
-                if (getDeviceType(dev_array[i]) != kAudioTypeOutput) continue;
+                if (getDeviceType(dev_array[i]) != kAudioTypeOutput && getDeviceType(dev_array[i] != kAudioTypeInputOutput)) continue;
                 break;
+            case kAudioTypeInputOutput:
             case kAudioTypeUnknown:
                 return kAudioDeviceUnknown;
         }
@@ -438,11 +446,19 @@ void showAllDevices(ASDeviceType typeRequested) {
         device_type = getDeviceType(dev_array[i]);
         switch(typeRequested) {
             case kAudioTypeInput:
-            case kAudioTypeOutput:
-                if (device_type != typeRequested) continue;
+                if (device_type == kAudioTypeInput || device_type == kAudioTypeInputOutput) {
+                    device_type = kAudioTypeInput;
+                } else {
+                    continue;
+                }
                 break;
+            case kAudioTypeOutput:
             case kAudioTypeSystemOutput:
-                if (device_type != kAudioTypeOutput) continue;
+                if (device_type == kAudioTypeOutput || device_type == kAudioTypeInputOutput) {
+                    device_type = kAudioTypeOutput;
+                } else {
+                    continue;
+                }
                 break;
             default:
                 return;
