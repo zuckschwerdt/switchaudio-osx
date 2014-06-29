@@ -172,7 +172,8 @@ AudioDeviceID getCurrentlySelectedDeviceID(ASDeviceType typeRequested) {
 		case kAudioTypeSystemOutput:
 			AudioHardwareGetProperty(kAudioHardwarePropertyDefaultSystemOutputDevice, &propertySize, &deviceID);
 			break;
-			
+        default:
+            break;
 	}
 	
 	return deviceID;
@@ -203,6 +204,8 @@ char *deviceTypeName(ASDeviceType device_type) {
 		case kAudioTypeInput: return "input";
 		case kAudioTypeOutput: return "output";
 		case kAudioTypeSystemOutput: return "system";
+        default:
+            break;
 	}
 	return "unknown";
 }
@@ -239,6 +242,8 @@ AudioDeviceID getRequestedDeviceID(char * requestedDeviceName, ASDeviceType type
 			case kAudioTypeSystemOutput:
 				if (getDeviceType(dev_array[i]) != kAudioTypeOutput) continue;
 				break;
+            default:
+                return kAudioDeviceUnknown;
 		}
 		
 		getDeviceName(dev_array[i], deviceName);
@@ -274,6 +279,8 @@ AudioDeviceID getNextDeviceID(AudioDeviceID currentDeviceID, ASDeviceType typeRe
 			case kAudioTypeSystemOutput:
 				if (getDeviceType(dev_array[i]) != kAudioTypeOutput) continue;
 				break;
+            case kAudioTypeUnknown:
+                return kAudioDeviceUnknown;
 		}
 
 		if (first_dev == kAudioDeviceUnknown) {
@@ -303,6 +310,8 @@ void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested) {
 		case kAudioTypeSystemOutput:
 			AudioHardwareSetProperty(kAudioHardwarePropertyDefaultSystemOutputDevice, propertySize, &newDeviceID);
 			break;
+        default:
+            break;
 	}
 	
 }
@@ -329,6 +338,8 @@ void showAllDevices(ASDeviceType typeRequested) {
 			case kAudioTypeSystemOutput:
 				if (device_type != kAudioTypeOutput) continue;
 				break;
+            default:
+                return;
 		}
 		
 		getDeviceName(dev_array[i], deviceName);
