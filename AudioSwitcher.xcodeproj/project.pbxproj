@@ -152,6 +152,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = AudioSwitcher;
 			};
 			name = Debug;
@@ -163,6 +164,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = SwitchAudioSource;
 			};
 			name = Release;
