@@ -33,23 +33,20 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <CoreServices/CoreServices.h>
 #include <CoreAudio/CoreAudio.h>
 
-
 typedef enum { 
-  	kAudioTypeUnknown = 0, 
-    kAudioTypeInput   = 1, 
+    kAudioTypeUnknown = 0,
+    kAudioTypeInput   = 1,
     kAudioTypeOutput  = 2,
     kAudioTypeSystemOutput = 3
 } ASDeviceType;
 
 enum {
-	kFunctionSetDevice   = 1,
-	kFunctionShowHelp    = 2,
-	kFunctionShowAll     = 3,
-	kFunctionShowCurrent = 4,
-	kFunctionCycleNext   = 5
+    kFunctionSetDevice   = 1,
+    kFunctionShowHelp    = 2,
+    kFunctionShowAll     = 3,
+    kFunctionShowCurrent = 4,
+    kFunctionCycleNext   = 5
 };
-
-
 
 void showUsage(const char * appName);
 int runAudioSwitch(int argc, const char * argv[]);
@@ -62,4 +59,3 @@ AudioDeviceID getRequestedDeviceID(char * requestedDeviceName, ASDeviceType type
 AudioDeviceID getNextDeviceID(AudioDeviceID currentDeviceID, ASDeviceType typeRequested);
 void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested);
 void showAllDevices(ASDeviceType typeRequested);
-
