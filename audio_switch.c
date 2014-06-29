@@ -159,8 +159,7 @@ int runAudioSwitch(int argc, const char * argv[]) {
 AudioDeviceID getCurrentlySelectedDeviceID(ASDeviceType typeRequested) {
 	UInt32 propertySize;
 	AudioDeviceID deviceID = kAudioDeviceUnknown;
-	
-	// get the default output device
+
 	propertySize = sizeof(deviceID);
 	switch(typeRequested) {
 		case kAudioTypeInput: 
